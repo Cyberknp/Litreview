@@ -19,12 +19,3 @@ This is **Retrieval-Augmented Generation (RAG)** — grounding LLM answers in re
 ## Status
 
 Early stage. Core RAG pipeline under development; agentic workflow is on the roadmap.
-
-## Roadmap
-
-- [ ] Paper fetching (arXiv)
-- [ ] Text extraction + metadata storage
-- [ ] Keyword + semantic search
-- [ ] Passage retrieval + answer generation with citations
-- [ ] Tracing, caching, evaluation
-- [ ] Agentic loop (re-search / rewrite / reject)
