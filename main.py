@@ -1,4 +1,4 @@
-from fastAPI import FastAPI
+from fastapi import FastAPI
 
 app=FastAPI(title="Litreview:Research paper review")
 
@@ -34,4 +34,4 @@ def search_papers(q:str):
         paper for paper in papers if q.lower() in paper["title"].lower()
     ]
 
-return {query: q, "results": results}
+    return {"query": q, "results": results}
