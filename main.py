@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from pydantic import BaseModel
 
 app=FastAPI(title="Litreview:Research paper review")
@@ -25,13 +25,18 @@ papers = [
     },
     {
         "id": 2,
-        "title": "Retrieval-Augmented Generation for Research",
+        "title": "Retrieval-Augmented Generation (RAG) for Research",
         "year": 2024,
     },
     {
         "id": 3,
         "title": "Deep Learning for Medical Image Analysis",
         "year": 2023,
+    },
+    {
+        "id": 4,
+        "title": "RAG Pipelines for Automated Literature Review",
+        "year": 2022,
     },
 ]
 
