@@ -22,7 +22,7 @@ def initialize_database():
                 """
                 INSERT INTO papers (id, title, year)
                 VALUES (%s, %s, %s)
-                ON CONFLICT (id) DO NOTHING
+                ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, year = EXCLUDED.year
                 """,
                 [
                     (
@@ -32,7 +32,7 @@ def initialize_database():
                     ),
                     (
                         2,
-                        "Retrieval-Augmented Generation for Research",
+                        "Retrieval-Augmented Generation (RAG) for Research",
                         2024,
                     ),
                     (
