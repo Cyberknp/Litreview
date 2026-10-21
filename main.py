@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Query
 from pydantic import BaseModel
 
+from db import get_connection
+
 app=FastAPI(title="Litreview:Research paper review")
 
 #defining the structure of a single paper 
@@ -17,28 +19,6 @@ class SearchResponse(BaseModel):
     query:str
     results:list[paper]
 
-papers = [
-    {
-        "id": 1,
-        "title": "Large Language Models in Medical Diagnosis",
-        "year": 2025,
-    },
-    {
-        "id": 2,
-        "title": "Retrieval-Augmented Generation (RAG) for Research",
-        "year": 2024,
-    },
-    {
-        "id": 3,
-        "title": "Deep Learning for Medical Image Analysis",
-        "year": 2023,
-    },
-    {
-        "id": 4,
-        "title": "RAG Pipelines for Automated Literature Review",
-        "year": 2022,
-    },
-]
 
 @app.get("/health")
 def health_check():
@@ -46,12 +26,29 @@ def health_check():
 
 @app.get("/papers", response_model=PaperResponse)
 def get_papers():
-    return {"papers": papers}
+    with get_connection() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, title, year
+            FROM papers
+            ORDER BY id
+            """
+        ).fetchall()
+
+    return {"papers": rows}
+
 
 @app.get("/search", response_model=SearchResponse)
 def search_papers(q: str = Query(min_length=1)):
-    results=[
-        paper for paper in papers if q.lower() in paper["title"].lower()
-    ]
+    with get_connection() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, title, year
+            FROM papers
+            WHERE title ILIKE %s
+            ORDER BY id
+            """,
+            (f"%{q}%",),
+        ).fetchall()
 
-    return {"query": q, "results": results}
+    return {"query": q, "results": rows}
