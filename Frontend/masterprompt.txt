@@ -1,0 +1,81 @@
+ROLE
+You are a senior front-end engineer and UI designer who specialises in calm, distraction-free reading interfaces and tasteful CSS 3D animation.
+
+PROJECT CONTEXT
+"Literature Review" is a research-paper curator. It uses RAG to fetch the most relevant papers and data from the internet for a user's research topic. The entire website will be designed as an open book, and moving between pages of the site will be shown as turning book pages. Right now I only need the WELCOME PAGE (the first spread of the book) so I can visualise the concept. Build it so more pages can be added later without a rewrite.
+
+GOAL
+A single, polished welcome page where the user sees a closed book on a desk, opens it, and lands on a welcome spread. The experience must feel quiet, scholarly and focused, never flashy.
+
+DESIGN SYSTEM (use CSS variables)
+Day theme ("Paper"):
+- --desk-bg: #1F2A2A (deep muted slate-green, with a very subtle vignette)
+- --cover: #2F4A45 (dark book-cloth green) with gold-ish foil title #C9A96A
+- --paper: #F4EEDF (warm cream page)
+- --paper-shade: #E9E1CD (gutter shading and page edges)
+- --ink: #2B2A28 (warm charcoal text)
+- --ink-soft: #5E5A52 (secondary text)
+- --accent: #5F8A72 (muted sage, buttons, links, bookmark ribbon)
+- --accent-hover: #4D7360
+- --rule: #D8CFB8 (hairlines and dividers)
+Night theme ("Lamp"):
+- --desk-bg: #121718, --paper: #2A2823, --paper-shade: #211F1B, --ink: #E6DFCE, --ink-soft: #A39C8B, --accent: #8DB8A0, --rule: #3B382F
+Rules: body text contrast at least WCAG AA (aim for AAA), no pure #FFF or #000, no gradients louder than a soft paper shading, no neon, no red.
+
+TYPOGRAPHY
+- Headings and book title: "Newsreader" or "EB Garamond" (serif)
+- Body and UI: "Source Sans 3" or "Inter"
+- Body size 17-18px, line-height 1.65, max line length about 60 characters per page
+- Small-caps for labels such as "Chapter I" and "Contents"
+
+LAYOUT AND CONTENT
+State 1, closed book (centered on the desk):
+- Hardcover with cloth texture (CSS only), gold foil title "Literature Review" and subtitle "A curated companion for your research"
+- Subtle floating shadow beneath the book
+- A "Open the book" button, also clickable on the cover itself
+
+State 2, open spread (two pages, with gutter shadow in the middle):
+- LEFT PAGE (Welcome):
+  - Small-caps label "Welcome"
+  - Headline: "Read less noise. Find more signal."
+  - 2-3 sentence description: it searches the web for the most relevant research papers on your topic using retrieval-augmented generation, then curates them into a clean reading list with summaries and sources
+  - Three short feature lines with small line icons: "Ask a research question", "Get curated papers with sources", "Save and organise your reading list"
+- RIGHT PAGE (Begin):
+  - Small-caps label "Begin"
+  - A search input: "What are you researching?" with a primary button "Start my review"
+  - Below it, a "Contents" list styled like a book table of contents with dotted leaders: I. Search ........ 1 / II. Library ........ 2 / III. Notes ........ 3 / IV. Citations ........ 4. These are placeholder links that trigger the page-turn animation to a blank "Coming soon" page.
+  - Page number at the bottom of each page, and a small sage bookmark ribbon hanging from the top of the right page
+
+INTERACTION AND ANIMATION
+- Cover opens with a 3D rotateY hinge animation (about 900ms, ease-in-out)
+- Page turn: CSS 3D transform with perspective, backface-visibility hidden, a soft moving shadow while turning, about 700ms
+- Navigation: click or tap the page edge, a next/previous arrow, or keyboard left/right arrows
+- Hover states are gentle (opacity or colour shifts only)
+- Theme toggle (Paper / Lamp) in a small corner control, remembered in localStorage
+- Respect prefers-reduced-motion: replace flips with a quick cross-fade
+- NO autoplay motion, parallax, particles, or looping animations. Nothing may compete with reading
+
+PAPER TEXTURE
+Pure CSS only (layered subtle gradients and a faint noise via SVG filter or data-URI). No external images.
+
+RESPONSIVE
+- Desktop and tablet landscape: two-page spread
+- Mobile and portrait: single page at a time with the same turn animation and a bottom page indicator
+
+ACCESSIBILITY
+Semantic HTML (main, nav, section), visible focus rings in the accent colour, aria-labels on all controls, full keyboard operation, and a readable order for screen readers.
+
+TECH CONSTRAINTS
+- One self-contained file (index.html) with inline CSS and vanilla JS, no build step, Google Fonts as the only external dependency
+- Structure the JS so each "page" is a data-driven object, so I can add new pages (Search, Library, etc.) later or port this to React
+- Clean, commented code with the design tokens at the top of the CSS
+
+ACCEPTANCE CHECKLIST
+1. Opens from the closed book into the welcome spread smoothly
+2. Page-turn works by click, tap, and arrow keys
+3. Both themes are comfortable to read for 30+ minutes
+4. Looks right at 1440px, 1024px and 390px widths
+5. No console errors, and reduced-motion is honoured
+
+OUTPUT FORMAT
+Return only the complete index.html in a single code block, followed by a short list of the design tokens I can tweak.
