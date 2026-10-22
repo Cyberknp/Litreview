@@ -16,5 +16,23 @@ services:
       timeout: 3s
       retries: 10
 
+  opensearch:
+    image: opensearchproject/opensearch:3.4.0
+    container_name: rag-learning-opensearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - DISABLE_SECURITY_PLUGIN=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+
 volumes:
   postgres_data:
+  opensearch_data:
