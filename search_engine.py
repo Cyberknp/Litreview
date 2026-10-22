@@ -64,6 +64,32 @@ def index_sample_papers():
     print("Four sample papers indexed.")
 
 
+def search_papers(query: str, size: int = 10):
+    response = client.search(
+        index=INDEX_NAME,
+        body={
+            "size": size,
+            "query": {
+                "match": {
+                    "title": {
+                        "query": query
+                    }
+                }
+            },
+        },
+    )
+
+    results = []
+
+    for hit in response["hits"]["hits"]:
+        results.append({
+            "score": hit["_score"],
+            **hit["_source"],
+        })
+
+    return results
+
+
 if __name__ == "__main__":
     print(check_connections())
     create_index()
@@ -73,29 +99,3 @@ if __name__ == "__main__":
 
     for result in results:
         print(result)
-
-def search_papers(query:str,size:int=10):
-    response=client.search(
-        index=INDEX_NAME,
-        body={
-            "size": size,
-            "query":{
-                "match":{
-                    "title":{
-                        "query":query
-                    }
-                }
-            },
-        },
-    )
-
-    results=[]
-
-    for hit in response["hits"]["hits"]:
-        results.append({
-            "score":hit["_score"],
-            **hit["_source"]
-        
-        })
-
-    results
