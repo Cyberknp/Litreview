@@ -1,5 +1,8 @@
 from fastapi import FastAPI, Query
 from pydantic import BaseModel
+from fastapi import HTTPException
+from search_engine import advanced_search 
+
 
 from db import get_connection
 
@@ -52,3 +55,24 @@ def search_papers(q: str = Query(min_length=1)):
         ).fetchall()
 
     return {"query": q, "results": rows}
+
+
+@app.get("/search/advanced")
+def search_advanced( q: str = Query(min_length=1, max_length=200),
+    year: int | None = Query(default=None, ge=1900, le=2100),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=10, ge=1, le=100)):
+
+    try:
+        return advanced_search(
+            query=q,
+            year=year,
+            page=page,
+            page_size=page_size,
+        )
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=str(exc),
+        ) from exc
+

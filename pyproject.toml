@@ -8,6 +8,7 @@ dependencies = [
     "fastapi>=0.143.0",
     "opensearch-py>=3.2.0",
     "psycopg[binary]>=3.3.6",
+    "sentence-transformers>=6.2.0",
     "uvicorn[standard]>=0.54.0",
 ]
 
