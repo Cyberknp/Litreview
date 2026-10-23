@@ -57,7 +57,7 @@ def search_papers(q: str = Query(min_length=1)):
     return {"query": q, "results": rows}
 
 
-@app.get("/search/advanced_search")
+@app.get("/search/advanced")
 def search_advanced( q: str = Query(min_length=1, max_length=200),
     year: int | None = Query(default=None, ge=1900, le=2100),
     page: int = Query(default=1, ge=1),
