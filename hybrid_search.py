@@ -49,23 +49,32 @@ def hybrid_Search(query: str, limit: int = 5) -> list[dict]:
 
     fused: dict[str, dict] = {}
 
-    for response in (keyword_response, vector_response):
+    for field, response in (
+        ("bm25_rank", keyword_response),
+        ("semantic_rank", vector_response),
+    ):
         for rank, hit in enumerate(response["hits"]["hits"], start=1):
             doc_id = hit["_id"]
 
             if doc_id not in fused:
                 fused[doc_id] = {
                     **hit["_source"],
-                    "score": 0.0,
+                    "rrf_score": 0.0,
+                    "bm25_rank": None,
+                    "semantic_rank": None,
                 }
 
-            fused[doc_id]["score"] += 1.0 / (RRF_K + rank)
+            fused[doc_id][field] = rank
+            fused[doc_id]["rrf_score"] += 1.0 / (RRF_K + rank)
 
     results = sorted(
         fused.values(),
-        key=lambda paper: paper["score"],
+        key=lambda paper: paper["rrf_score"],
         reverse=True,
     )
+
+    for paper in results:
+        paper["score"] = paper["rrf_score"]
 
     return results[:limit]
 
