@@ -1,5 +1,7 @@
 .venv/
 .env
+.env.*
+!.env.example
 __pycache__/
 *.pyc
 *.pyo
@@ -10,11 +12,15 @@ build/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
+.coverage
+htmlcov/
 .vscode/
 .idea/
+*.log
+desktop.ini
 .DS_Store
 Thumbs.db
-# future RAG data - uncomment when needed:
-# data/
-# *.pdf
+# future RAG data:
+data/
+*.pdf
 # .chroma/
