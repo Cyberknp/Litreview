@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Query
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 from fastapi import HTTPException
 from search_engine import advanced_search 
 from hybrid_search import hybrid_search
+from rag_pipeline import answer_question
 
 from db import get_connection
 
@@ -98,4 +99,29 @@ def search_hybrid(
         raise HTTPException(
             status_code=400,
             detail=str(exc),
+        ) from exc
+
+class AskRequest(BaseModel):
+    question: str = Field(min_length=3, max_length=1000)
+
+@app.post("/ask")
+def ask_question(request: AskRequest):
+    try:
+        result = answer_question(request.question)
+
+        return {
+            "question": result["question"],
+            "answer": result["answer"],
+            "sources": [
+                {
+                    "paper_id": source.get("paper_id"),
+                    "title": source.get("title"),
+                }
+                for source in result["sources"]
+            ],
+        }
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to generate an answer",
         ) from exc
