@@ -1,5 +1,5 @@
 from hybrid_search import hybrid_search
-
+from llm_client import generate_response 
 
 def build_context(
     results: list[dict],
@@ -62,9 +62,36 @@ def prepare_rag_prompt(question: str) -> dict:
     }
 
 
+def answer_question(question: str) -> dict:
+    rag_data = prepare_rag_prompt(question)
+
+    if not rag_data["sources"]:
+        return {
+            "question": question,
+            "answer": "I could not find relevant research sources.",
+            "sources": [],
+        }
+
+    answer = generate_response(rag_data["prompt"])
+
+    return {
+        "question": question,
+        "answer": answer,
+        "sources": rag_data["sources"],
+    }
+
+
 if __name__ == "__main__":
-    output = prepare_rag_prompt(
+    result = answer_question(
         "What are the symptoms of a heart attack?"
     )
 
-    print(output["prompt"])
+    print("\nQUESTION:")
+    print(result["question"])
+
+    print("\nGENERATED ANSWER:")
+    print(result["answer"])
+
+    print("\nSOURCES:")
+    for source in result["sources"]:
+        print("-", source["title"])
