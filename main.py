@@ -2,7 +2,7 @@ from fastapi import FastAPI, Query
 from pydantic import BaseModel
 from fastapi import HTTPException
 from search_engine import advanced_search 
-
+from hybrid_search import hybrid_Search
 
 from db import get_connection
 
