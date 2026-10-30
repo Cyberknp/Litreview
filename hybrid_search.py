@@ -7,7 +7,7 @@ from semantic_search import (
 RRF_K = 60
 
 
-def hybrid_search(query: str, limit: int = 5) -> list[dict]:
+def hybrid_Search(query: str, limit: int = 5) -> list[dict]:
     if not query.strip():
         raise ValueError("Query cannot be empty")
 
@@ -70,6 +70,9 @@ def hybrid_search(query: str, limit: int = 5) -> list[dict]:
     return results[:limit]
 
 
+hybrid_search = hybrid_Search
+
+
 if __name__ == "__main__":
-    for result in hybrid_search("heart attack diagnosis"):
+    for result in hybrid_Search("heart attack diagnosis"):
         print(result)

@@ -2,7 +2,7 @@ from fastapi import FastAPI, Query
 from pydantic import BaseModel
 from fastapi import HTTPException
 from search_engine import advanced_search 
-from hybrid_search import hybrid_Search
+from hybrid_search import hybrid_search
 
 from db import get_connection
 
@@ -76,3 +76,26 @@ def search_advanced( q: str = Query(min_length=1, max_length=200),
             detail=str(exc),
         ) from exc
 
+
+@app.get("/search/hybrid")
+def search_hybrid(
+    q: str = Query(min_length=1, max_length=200),
+    limit: int = Query(default=5, ge=1, le=100),
+):
+    try:
+        results = hybrid_search(
+            query=q,
+            limit=limit,
+        )
+
+        return {
+            "query": q,
+            "count": len(results),
+            "results": results,
+        }
+
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=str(exc),
+        ) from exc
