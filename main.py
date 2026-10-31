@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from search_engine import advanced_search 
 from hybrid_search import hybrid_search
 from rag_pipeline import answer_question
+from chunk_rag import answer_with_chunks
 
 from db import get_connection
 
@@ -124,4 +125,29 @@ def ask_question(request: AskRequest):
         raise HTTPException(
             status_code=500,
             detail="Unable to generate an answer",
+        ) from exc
+
+@app.post("/ask/chunks")
+def ask_with_chunks(request: AskRequest):
+    try:
+        result = answer_with_chunks(request.question)
+
+        return {
+            "question": result["question"],
+            "answer": result["answer"],
+            "sources": [
+                {
+                    "paper_id": source["paper_id"],
+                    "chunk_id": source["chunk_id"],
+                    "title": source["title"],
+                    "chunk_text": source["chunk_text"],
+                }
+                for source in result["sources"]
+            ],
+        }
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to generate chunk-based answer",
         ) from exc
